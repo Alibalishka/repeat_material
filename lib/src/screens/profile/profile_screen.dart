@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:repeat/src/common/constants/color_constant.dart';
+import 'package:repeat/src/router/routing_constants.dart';
 import 'package:repeat/src/screens/auth/auth_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -55,7 +58,10 @@ class ProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ), 
-                    onPressed: (){},
+                    onPressed: (){
+                      log('work');
+                      Navigator.of(context, rootNavigator: true).pushReplacementNamed(AuthRoute);
+                    },
                   ),
                 ],
               ),
