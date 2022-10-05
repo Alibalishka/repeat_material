@@ -40,6 +40,10 @@ dependencies:
   # Local Storage
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  # JSON read
+  json_annotation: ^4.7.0
+  json_serializable: ^6.4.1
+  build_runner: ^2.2.1
   
 dev_dependencies:
   flutter_test:

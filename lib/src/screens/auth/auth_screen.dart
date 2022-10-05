@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:repeat/src/common/constants/color_constant.dart';
 import 'package:repeat/src/common/constants/padding_constant.dart';
+import 'package:repeat/src/common/models/tokens_model.dart';
+import 'package:repeat/src/common/models/user_model.dart';
 import 'package:repeat/src/router/routing_constants.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -57,8 +59,18 @@ class _AuthScreenState extends State<AuthScreen> {
                     },
                   );
 
-                  tokensBox.put('accessToken', response.data['tokens']['accessToken']);
-                  tokensBox.put('refreshToken', response.data['tokens']['refreshToken']);
+                  TokensModel tokensModel = TokensModel.fromJson(
+                    response.data['tokens']
+                  );
+
+                  tokensBox.put('accessToken', tokensModel.access);
+                  tokensBox.put('refreshToken', tokensModel.refresh);
+
+                  UserModel userModel = UserModel.fromJson(
+                    response.data['user']
+                  );
+
+                  log(userModel.nickname.toString());
 
                   Navigator.pushReplacementNamed(context, MainRoute);
                 } on DioError {
