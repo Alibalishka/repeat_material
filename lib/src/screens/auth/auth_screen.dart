@@ -1,8 +1,10 @@
+
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:repeat/src/common/constants/color_constant.dart';
 import 'package:repeat/src/common/constants/padding_constant.dart';
 import 'package:repeat/src/router/routing_constants.dart';
@@ -45,6 +47,7 @@ class _AuthScreenState extends State<AuthScreen> {
               padding: AppPaddings.horizontal,
               child: CustomButtonWidget(str: 'Войти', 
               onPressed: () async{
+                Box tokensBox = Hive.box('tokens');
                 try{
                   Response response = await dio.post(
                     'http://188.225.83.80:6719/api/v1/auth/login',
@@ -54,8 +57,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     },
                   );
 
+                  tokensBox.put('accessToken', response.data['tokens']['accessToken']);
+                  tokensBox.put('refreshToken', response.data['tokens']['refreshToken']);
+
                   Navigator.pushReplacementNamed(context, MainRoute);
-                } on DioError catch (e){
+                } on DioError {
                   showCupertinoModalPopup(
                     context: context, 
                     builder: (context){
