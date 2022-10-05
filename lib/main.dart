@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:repeat/src/common/constants/color_constant.dart';
 import 'package:repeat/src/router/router.dart';
+import 'package:repeat/src/router/routing_constants.dart';
 import 'package:repeat/src/screens/auth/auth_screen.dart';
 
 void main() {
@@ -15,7 +17,11 @@ class MyApp extends StatelessWidget {
     return const CupertinoApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: AppRouter.generateRoute,
-      home: AuthScreen(),
+      initialRoute: AuthRoute,
+      theme: CupertinoThemeData(
+        scaffoldBackgroundColor: AppColors.background,
+        barBackgroundColor: AppColors.white
+      ),
     );
   }
 }

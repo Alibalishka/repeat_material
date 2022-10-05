@@ -2,7 +2,7 @@
 const String MainRoute = '/main';
 
 // ignore: constant_identifier_names
-const String AuthRoute = '/auth/login';
+const String AuthRoute = '/';
 // ignore: constant_identifier_names
 const String RegisterRoute = '/auth/register';
 
