@@ -1,15 +1,10 @@
-
-import 'dart:developer';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:repeat/src/common/constants/color_constant.dart';
 import 'package:repeat/src/common/constants/padding_constant.dart';
-import 'package:repeat/src/common/models/tokens_model.dart';
-import 'package:repeat/src/common/models/user_model.dart';
 import 'package:repeat/src/router/routing_constants.dart';
+import 'package:repeat/src/screens/auth/bloc/log_in_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -19,7 +14,6 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  Dio dio = Dio();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   @override
@@ -47,51 +41,40 @@ class _AuthScreenState extends State<AuthScreen> {
             const SizedBox(height: 32),
             Padding(
               padding: AppPaddings.horizontal,
-              child: CustomButtonWidget(str: 'Войти', 
-              onPressed: () async{
-                Box tokensBox = Hive.box('tokens');
-                try{
-                  Response response = await dio.post(
-                    'http://188.225.83.80:6719/api/v1/auth/login',
-                    data: {
-                      'email': emailController.text,
-                      'password': passwordController.text
-                    },
+              child: BlocConsumer<LogInBloc, LogInState>(
+                listener: (context, state){
+                  if(state is LogInLoaded){
+                    Navigator.pushReplacementNamed(context, MainRoute);
+                  }else if(state is LogInFailed){
+                    showCupertinoModalPopup(
+                      context: context, 
+                      builder: (context){
+                        return CupertinoAlertDialog(
+                          title: const Text('Ошибка'),
+                          content: Text(state.message ?? ''),
+                          actions: [
+                            CupertinoButton(
+                              child: const Text('Ok'), 
+                              onPressed: ()=> Navigator.pop(context),
+                            )
+                          ],
+                        );
+                      }
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return CustomButtonWidget(str: 'Войти', 
+                  onPressed: state is LogInLoading ? null : (){
+                    context.read<LogInBloc>().add(
+                      LogInPressed(
+                        email: emailController.text, 
+                        password: passwordController.text
+                      ),
+                    );
+                   }
                   );
-
-                  TokensModel tokensModel = TokensModel.fromJson(
-                    response.data['tokens']
-                  );
-
-                  tokensBox.put('accessToken', tokensModel.access);
-                  tokensBox.put('refreshToken', tokensModel.refresh);
-
-                  UserModel userModel = UserModel.fromJson(
-                    response.data['user']
-                  );
-
-                  log(userModel.nickname.toString());
-
-                  Navigator.pushReplacementNamed(context, MainRoute);
-                } on DioError {
-                  showCupertinoModalPopup(
-                    context: context, 
-                    builder: (context){
-                      return CupertinoAlertDialog(
-                        title: const Text('Ошибка'),
-                        content: const Text('Неправильный логин или пароль!'),
-                        actions: [
-                          CupertinoButton(
-                            child: const Text('Ok'), 
-                            onPressed: ()=> Navigator.pop(context),
-                          )
-                        ],
-                      );
-                    }
-                  );
-                  rethrow;
                 }
-              }
               ),
             ),
             const SizedBox(height: 19),

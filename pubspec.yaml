@@ -37,6 +37,7 @@ dependencies:
   transparent_cupertino_navigationbar: ^0.0.4
   readmore: ^2.1.0
   dio: ^4.0.6
+  flutter_bloc: ^8.1.1
   # Local Storage
   hive: ^2.2.3
   hive_flutter: ^1.1.0
