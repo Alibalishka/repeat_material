@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:repeat/src/common/constants/color_constant.dart';
+import 'package:repeat/src/common/dependencies/injection_container.dart';
 import 'package:repeat/src/router/router.dart';
 import 'package:repeat/src/router/routing_constants.dart';
 
 void main() async{
   await Hive.initFlutter();
   await Hive.openBox('tokens');
+  initGetIt();
   runApp(const MyApp());
 }
 

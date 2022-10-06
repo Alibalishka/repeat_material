@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repeat/src/common/dependencies/injection_container.dart';
 import 'package:repeat/src/router/routing_constants.dart';
 import 'package:repeat/src/screens/auth/auth_screen.dart';
 import 'package:repeat/src/screens/auth/bloc/log_in_bloc.dart';
@@ -16,14 +18,14 @@ class AppRouter{
       case AuthRoute:
         return CupertinoPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => LogInBloc(),
+            create: (context) => LogInBloc(dio: getIt<Dio>()),
             child: const AuthScreen(), 
           ),
         );
       case RegisterRoute:
         return CupertinoPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => LogInBloc(),
+            create: (context) => LogInBloc(dio: getIt<Dio>()),
             child: const RegisterScreen(), 
           )
         );

@@ -8,17 +8,20 @@ part 'log_in_event.dart';
 part 'log_in_state.dart';
 
 class LogInBloc extends Bloc<LogInEvent, LogInState> {
-  LogInBloc(): super(LogInInitial()){
-    on<LogInPressed>(_authUser);
-  }
   Dio dio = Dio();
   Box tokensBox = Hive.box('tokens');
+
+  LogInBloc({
+    required this.dio
+  }): super(LogInInitial()){
+    on<LogInPressed>(_authUser);
+  }
 
   void _authUser(event, Emitter<LogInState> emit) async{
     emit(LogInLoading());
     try{
       Response response = await dio.post(
-        'http://188.225.83.80:6719/api/v1/auth/login',
+        'auth/login',
         data: {
           'email': event.email,
           'password': event.password
